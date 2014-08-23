@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% from "_form_helper.html" import render_field %}
+
+{% block menu %}
+    {% if not current_user.is_authenticated() %}
+        <a href="{{ url_for('registration') }}">Registration</a>
+        <a href="{{ url_for('login') }}">Login</a>
+    {% else %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+        <a href="{{ url_for('create_room') }}">Create room</a>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <form action="" method="post" name="index">
+        {{ form.hidden_tag() }}
+
+        {{ form.name(placeholder="find room", autocomplete="off")|safe}}
+        
+    </form>
+    <dl>
+        {% for room in rooms %}
+            <dt><a class="room" href="{{ url_for('room',roomname=room.name) }}"><strong>{{room.name}}</strong> created by {{room.creator.name}}</a> </li>
+        {% endfor %}
+    </dl>
+{% endblock %}

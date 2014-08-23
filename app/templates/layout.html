@@ -1,0 +1,24 @@
+<!doctype html>
+<head>
+    <title>{{ title }}</title>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+    {% block head %}{% endblock %}
+</head>
+<body>
+
+    {% for message in get_flashed_messages() %}
+        <div class=flash>{{ message }}</div>
+    {% endfor %}
+
+    <div class=menu>
+        {% block menu %}{% endblock %}
+    </div>
+
+
+    <div class=body>
+      {% block body %}{% endblock %}
+    </div>
+
+</body>

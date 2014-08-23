@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+{% block head %}
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function(){
+
+            namespace = '/chat';
+        
+            var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
+            socket.on('connect', function(){
+                socket.emit('join', {room : "{{ room.name }}"});
+            });
+            
+            
+            socket.on('message', function(msg) {
+                $('#messages').prepend('<div class="message"><img src=' + msg.avatar + '><strong>' + msg.username + ' sent:</strong><p>' + msg.data +  '</p><p><span class="date">' + msg.time + '</p></span></div>');
+            });
+            
+            
+            socket.on('response', function(msg) {
+                $('#messages').prepend("<div class='message'>" + msg.data + '</div>');
+            });
+            
+            
+            $('form#input_panel').submit(function(event){
+                socket.emit('message', {data : $('#new_message').val(), room : "{{ room.name }}"});
+                return false;
+            });
+            
+            $('#new_message').keydown(function(event) {
+                var message = $("#new_message").val();
+                if (event.keyCode == 13) {
+                    if (message != "") {
+                        $('form#input_panel').submit();
+                    }
+                $("textarea").val('');
+                return false;
+                }
+            });
+
+        });
+    
+    </script>
+
+
+{% endblock %}
+
+
+{% block menu %}
+
+    <a href="{{ url_for('logout') }}">Logout</a>
+    <a href="{{ url_for('index') }}">Leave room</a>
+    <a href="{{ url_for('create_room') }}">Create room</a>
+{% endblock %}
+
+{% block body %}
+    
+    <h1>{{ room.name }} </h1>
+    <div id="rooms">
+        {% for c in rooms %}
+            {{ c }} <br>
+        {% endfor %}
+    </div>
+
+    <div>
+        
+        <dl id='messages'>
+            {% for m in messages %}
+                <div class='message'> <img src="{{ m.user.avatar(50) }}"><strong>{{m.user.name}}  sent:</strong> <p>{{m.text}}</p><p><span class="date">{{m.timestamp.strftime("%m-%d %H:%M")
+}}</span></p> </div>
+            {% endfor %}
+        </dl>
+        
+        <form id="input_panel" method="POST" action="">
+            <textarea name="new_message" id="new_message" placeholder="Start typing... Press Enter to send message." wrap="virtual" ></textarea>
+        </form>
+    </div>
+
+    <div>
+        <ul id="roommates">
+            {% for r in roommates %}
+                <li>{{ r }}</li> 
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endblock %}
+
+
