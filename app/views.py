@@ -88,7 +88,7 @@ def room(roomname):
 def test_connect():
     print('Client connected')
     
-    
+
 @socketio.on('disconnect', namespace='/chat')
 def test_disconnect():
     leave_room(session['room'])
