@@ -32,5 +32,5 @@ class RegistrationForm(Form):
 
 
 class RoomForm(Form):
-    name = StringField('Room name', validators=[Required(), Regexp('^[A-Za-z0-9_.]*$', 0,'Letters, numbers, dots or _')])
+    name = StringField('Room name', description='Room name', validators=[Required(), Regexp('^[A-Za-z0-9_.]*$', 0,'Letters, numbers, dots or _')])
     
